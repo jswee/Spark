@@ -25,7 +25,10 @@ public class InputHandler implements Runnable {
             try {
                 val = (byte) in.read();
             } catch (IOException e) {
-                Log.e("BLUETOOTH", "Failed to read: " + e);
+                if (e.getMessage().equals("bt socket closed, read return: -1"))
+                    break;
+                else
+                    Log.e("BLUETOOTH", "Failed to read: " + e);
             }
             buf.offer(val);
             Log.d("BLUETOOTH", buf.toString());
