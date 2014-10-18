@@ -1,15 +1,10 @@
 package com.sparkapp.spark;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 
 public class DiscoveryProcess extends Thread {
-
-    public static DiscoveryProcess makeProcess() {
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (bluetoothAdapter == null)
-            return null;
-        return new DiscoveryProcess(bluetoothAdapter);
-    }
 
     public BluetoothAdapter adapter;
 
@@ -19,6 +14,16 @@ public class DiscoveryProcess extends Thread {
 
     @Override
     public void run() {
-        
+
     }
 }
+
+/*
+    BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+    if (adapter == null) {
+       // No bluetooth qq
+    }
+    Intent enableBluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+    startActivityForResult(enableBluetoothIntent, REQUEST_ENABLE_BT);
+    DiscoveryProcess dp = new DiscoveryProcess(adapter);
+*/
