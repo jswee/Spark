@@ -19,13 +19,15 @@ public class InputHandler implements Runnable {
 
     @Override
     public void run() {
+        byte val = 0;
         while(true) {
             try {
-                buf.offer((byte) in.read());
+                val = (byte) in.read();
             } catch (IOException e) {
                 Log.e("BLUETOOTH", "Failed to read: " + e);
             }
-            Log.d("BLUETOOTH", in.toString());
+            buf.offer(val);
+            Log.d("BLUETOOTH", buf.toString());
         }
     }
 }

@@ -14,14 +14,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 
@@ -33,6 +30,8 @@ public class MainActivity extends Activity {
 
     BluetoothAdapter adapter;
     List<BluetoothDevice> devices;
+
+    BroadcastReceiver finishedReciever;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +86,7 @@ public class MainActivity extends Activity {
         discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
         startActivity(discoverableIntent);
 
-        BroadcastReceiver finishedReciever = new BroadcastReceiver() {
+        finishedReciever = new BroadcastReceiver() {
             boolean done = false;
             public void onReceive(Context context, Intent intent) {
                 adapter.cancelDiscovery();
@@ -105,16 +104,14 @@ public class MainActivity extends Activity {
     }
 
     public void startConnection() {
-        if(devices.size() == 0)
-            serverConnection();
-        else {
-            for(BluetoothDevice device : devices) {
-                try {
-                    clientConnection(device.createRfcommSocketToServiceRecord(uuid));
-                    break;
-                } catch (IOException ex) {
-                    Log.e("ERROR", "Error creating RFCOMM socket", ex);
-                }
+        unregisterReceiver(finishedReciever);
+        serverConnection();
+        for(BluetoothDevice device : devices) {
+            try {
+                clientConnection(device.createRfcommSocketToServiceRecord(uuid));
+                break;
+            } catch (IOException ex) {
+                Log.e("ERROR", "Error creating RFCOMM socket", ex);
             }
         }
     }
@@ -132,7 +129,7 @@ public class MainActivity extends Activity {
         boolean done = false;
         while(true) {
             try {
-                tmp = serverSocket.accept(1000);
+                tmp = serverSocket.accept(10000);
                 if(tmp == null)
                     break;
                 sockets.add(tmp);
@@ -158,16 +155,10 @@ public class MainActivity extends Activity {
     }
 
     public void clientConnection(BluetoothSocket socket) {
-        adapter.cancelDiscovery();
-
         try {
             socket.connect();
         } catch(IOException ex) {
             Log.e("ERROR", "IO error", ex);
-            serverConnection();
-            try {
-                socket.close();
-            } catch (IOException ix) {}
         }
 
         try {
