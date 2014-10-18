@@ -18,6 +18,7 @@ import android.widget.Button;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -103,7 +104,7 @@ public class MainActivity extends Activity {
         try {
             serverSocket = adapter.listenUsingRfcommWithServiceRecord(adapter.getName(), uuid);
         } catch (IOException e) {
-            Log.e("BLUETOOTH", "ERROR: " + e.toString());
+            Log.e("BLUETOOTH", "ERROR: " + Arrays.toString(e.getStackTrace()));
         }
 
         try {
@@ -112,7 +113,7 @@ public class MainActivity extends Activity {
                 sockets.add(socket);
             }
         } catch (IOException e) {
-            Log.e("BLUETOOTH", "ERROR: " + e.toString());
+            Log.e("BLUETOOTH", "ERROR: " + Arrays.toString(e.getStackTrace()));
         }
 
         for (BluetoothSocket s : sockets) {
@@ -129,10 +130,11 @@ public class MainActivity extends Activity {
             for (BluetoothDevice device : pairedDevices) {
                 try {
                     BluetoothSocket socket = device.createRfcommSocketToServiceRecord(uuid);
+                    socket.connect();
                     new Thread(new InputHandler(socket.getInputStream())).start();
                     socket.getOutputStream().write(42);
                 } catch (IOException e) {
-                    Log.e("BLUETOOTH", "ERROR: " + e.toString());
+                    Log.e("BLUETOOTH", "ERROR: " + Arrays.toString(e.getStackTrace()));
                 }
             }
         }
