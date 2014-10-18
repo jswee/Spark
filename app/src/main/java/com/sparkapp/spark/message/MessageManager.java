@@ -5,9 +5,9 @@ import java.util.List;
 
 public class MessageManager {
 
-    public volatile List<Message> messages = new ArrayList<Message>();
+    private static volatile List<Message> messages = new ArrayList<Message>();
 
-    public void addMessage(String message) {
+    public static void addMessage(String message) {
         int split = message.indexOf(' ');
         long time = Long.parseLong(message.substring(0, split));
         String msg = message.substring(split);

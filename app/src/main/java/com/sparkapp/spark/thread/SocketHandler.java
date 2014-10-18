@@ -3,6 +3,8 @@ package com.sparkapp.spark.thread;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
+import com.sparkapp.spark.message.MessageManager;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,11 +16,12 @@ import java.util.Queue;
 public class SocketHandler implements Runnable {
 
     BluetoothSocket socket;
-    List<Character> buf;
+    StringBuilder buf;
+    OutputStream out;
 
     public SocketHandler(BluetoothSocket socket) {
         this.socket = socket;
-        buf = new ArrayList<Character>();
+        buf = new StringBuilder();
     }
 
     @Override
@@ -44,18 +47,28 @@ public class SocketHandler implements Runnable {
                         else
                             Log.e("BLUETOOTH", "Failed to read: " + e);
                     }
-                    buf.add((char)val);
+                    buf.append((char)val);
+                    if ((char)val == '\n') {
+                        MessageManager.addMessage(buf.toString());
+                        buf.setLength(0);
+                    }
                     Log.d("BLUETOOTH", buf.toString());
                 }
             }
         }).start();
 
-        OutputStream out = null;
         try {
             out = socket.getOutputStream();
-            out.write(42);
-        } catch(IOException ex) {
-            Log.e("BLUETOOTH", "Error writing to output stream", ex);
+        } catch(IOException e) {
+            Log.e("BLUETOOTH", "Error writing to output stream", e);
+        }
+    }
+
+    public void writeMessage(String s) {
+        try {
+            out.write(s.getBytes());
+        } catch (IOException e) {
+            Log.d("WRITIN'", e.getMessage(), e);
         }
     }
 }
