@@ -88,35 +88,10 @@ public class ChatActivity extends Activity {
 
         devices = new ArrayList<BluetoothDevice>();
 
-        BroadcastReceiver foundReciever = new BroadcastReceiver() {
-            public void onReceive(Context context, Intent intent) {
-                if (BluetoothDevice.ACTION_FOUND.equals(intent.getAction()))
-                    devices.add((BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE));
-            }
-        };
-        IntentFilter foundFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        registerReceiver(foundReciever, foundFilter);
-
-        finishedReciever = new BroadcastReceiver() {
-            boolean done = false;
-            public void onReceive(Context context, Intent intent) {
-                adapter.cancelDiscovery();
-                if (!done) {
-                    startConnection();
-                    done = true;
-                    Log.d("DONE", "Done with recieving");
-                }
-            }
-        };
-        IntentFilter finishedFilter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        registerReceiver(finishedReciever, finishedFilter);
-
-        adapter.startDiscovery();
+        startConnection();
     }
 
     public void startConnection() {
-        adapter.cancelDiscovery();
-        unregisterReceiver(finishedReciever);
         serverConnection();
         Set<BluetoothDevice> pairedDevices = adapter.getBondedDevices();
         for(BluetoothDevice device : pairedDevices) {
