@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,7 +38,7 @@ public class ChatFragment extends Fragment {
             chat_id = getArguments().getString(CHAT_ID);
         }
 
-        Button button = (Button)(getActivity().findViewById(R.id.));
+        ImageButton button = (ImageButton)(getActivity().findViewById(R.id.send_button));
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
