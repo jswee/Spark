@@ -19,54 +19,42 @@ import android.widget.Button;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 
 public class MainActivity extends Activity {
 
     public static final UUID uuid = UUID.fromString("b042294f-84f1-43ca-b7f5-a84631b084f7");
+    private static final int DISCOVERABLE_ACTIVITY_RESULT = 42;
     public static String channel_id = null;
 
     BluetoothAdapter adapter;
     List<BluetoothDevice> devices;
-
-    private boolean initBlue() {
-        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-        if(adapter == null)
-            return false;
-        if(!adapter.isEnabled()) {
-            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-        }
-        return true;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ((Button)findViewById(R.id.connect))
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        new ChannelDialog().show(getFragmentManager(), "Channel");
-                    }
-                });
+        Button connectButton = (Button)findViewById(R.id.connect);
+        connectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //new ChannelDialog().show(getFragmentManager(), "Channel");
+                startDiscovery();
+            }
+        });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
@@ -80,7 +68,7 @@ public class MainActivity extends Activity {
             Log.e("BLUETOOTH", "NO BLUETOOTH?!?!?!");
         }
         Intent enableBluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-        startActivityForResult(enableBluetoothIntent, 0);
+        startActivity(enableBluetoothIntent);
 
         devices = new ArrayList<BluetoothDevice>();
 
@@ -93,6 +81,10 @@ public class MainActivity extends Activity {
         IntentFilter foundFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(foundReciever, foundFilter);
 
+        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+        startActivity(discoverableIntent);
+
         BroadcastReceiver finishedReciever = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 adapter.cancelDiscovery();
@@ -102,12 +94,9 @@ public class MainActivity extends Activity {
         IntentFilter finishedFilter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         registerReceiver(finishedReciever, finishedFilter);
 
-        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-        startActivity(discoverableIntent);
-
         adapter.startDiscovery();
     }
+
     public void startConnection() {
         List<BluetoothSocket> sockets = new ArrayList<BluetoothSocket>();
         BluetoothServerSocket serverSocket = null;
@@ -129,11 +118,23 @@ public class MainActivity extends Activity {
         for (BluetoothSocket s : sockets) {
             try {
                 new Thread(new InputHandler(s.getInputStream())).start();
+                s.getOutputStream().write(42);
             } catch (IOException e) {
                 Log.e("BLUETOOTH", "Failed to get input stream: " + e);
             }
         }
 
-        //BluetoothDevice device = adapter.
+        Set<BluetoothDevice> pairedDevices = adapter.getBondedDevices();
+        if (pairedDevices.size() > 0) {
+            for (BluetoothDevice device : pairedDevices) {
+                try {
+                    BluetoothSocket socket = device.createRfcommSocketToServiceRecord(uuid);
+                    new Thread(new InputHandler(socket.getInputStream())).start();
+                    socket.getOutputStream().write(42);
+                } catch (IOException e) {
+                    Log.e("BLUETOOTH", "ERROR: " + e.toString());
+                }
+            }
+        }
     }
 }
