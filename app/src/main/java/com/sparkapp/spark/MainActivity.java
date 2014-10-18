@@ -104,16 +104,21 @@ public class MainActivity extends Activity {
         try {
             serverSocket = adapter.listenUsingRfcommWithServiceRecord(adapter.getName(), uuid);
         } catch (IOException e) {
-            Log.e("BLUETOOTH", "ERROR: " + Arrays.toString(e.getStackTrace()));
+            Log.e("BLUETOOTH", "ERROR: " + e.toString(), e);
         }
 
-        try {
-            while (true) {
+        Log.d("BLUETOOTH", "Searching for connections");
+        boolean done = false;
+        while (!done) {
+            try {
                 BluetoothSocket socket = serverSocket.accept(10);
                 sockets.add(socket);
+            } catch (IOException e) {
+                if (e.getMessage().equals("Try again"))
+                    done = true;
+                else
+                    Log.e("BLUETOOTH", "ERROR: " + e.getMessage(), e);
             }
-        } catch (IOException e) {
-            Log.e("BLUETOOTH", "ERROR: " + Arrays.toString(e.getStackTrace()));
         }
 
         for (BluetoothSocket s : sockets) {
@@ -126,16 +131,15 @@ public class MainActivity extends Activity {
         }
 
         Set<BluetoothDevice> pairedDevices = adapter.getBondedDevices();
-        if (pairedDevices.size() > 0) {
-            for (BluetoothDevice device : pairedDevices) {
-                try {
-                    BluetoothSocket socket = device.createRfcommSocketToServiceRecord(uuid);
-                    socket.connect();
-                    new Thread(new InputHandler(socket.getInputStream())).start();
-                    socket.getOutputStream().write(42);
-                } catch (IOException e) {
-                    Log.e("BLUETOOTH", "ERROR: " + Arrays.toString(e.getStackTrace()));
-                }
+        for (BluetoothDevice device : pairedDevices) {
+            Log.d("DEVICE", device.getName() + " " + device.getAddress());
+            try {
+                BluetoothSocket socket = device.createRfcommSocketToServiceRecord(uuid);
+                socket.connect();
+                new Thread(new InputHandler(socket.getInputStream())).start();
+                socket.getOutputStream().write(42);
+            } catch (IOException e) {
+                Log.e("BLUETOOTH", "ERROR: " + e.toString(), e);
             }
         }
     }
