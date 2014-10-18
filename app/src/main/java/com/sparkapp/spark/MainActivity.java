@@ -155,6 +155,7 @@ public class MainActivity extends Activity {
     }
 
     public void clientConnection(BluetoothSocket socket) {
+        Log.d("CONNECTING", socket.getRemoteDevice().getName() + socket.getRemoteDevice().getAddress());
         try {
             socket.connect();
         } catch(IOException ex) {
