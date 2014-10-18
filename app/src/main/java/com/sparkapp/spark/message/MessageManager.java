@@ -23,7 +23,7 @@ public class MessageManager {
             @Override
             public void run() {
                 ListView list = (ListView) activity.findViewById(R.id.message_list);
-                list.setAdapter(new ArrayAdapter<Message>(activity, R.layout.fragment_chat, messages));
+                list.setAdapter(new ArrayAdapter<Message>(activity, R.layout.message_layout, messages));
             }
         });
     }
