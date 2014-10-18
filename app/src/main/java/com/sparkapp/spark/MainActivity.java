@@ -118,44 +118,24 @@ public class MainActivity extends Activity {
     }
 
     public void serverConnection() {
-        List<BluetoothSocket> sockets = new ArrayList<BluetoothSocket>();
-        BluetoothSocket tmp;
-        BluetoothServerSocket serverSocket = null;
-        try {
-            serverSocket = adapter.listenUsingRfcommWithServiceRecord(adapter.getName(), uuid);
-        } catch(IOException ex) {
-            Log.e("ERROR", "IO exception initializing server socket", ex);
-        }
-
-        boolean done = false;
-        while(true) {
-            try {
-                tmp = serverSocket.accept(10000);
-                if(tmp == null)
-                    break;
-                sockets.add(tmp);
-            } catch(IOException ex) {
-                Log.e("ERROR", "Error accepting socket", ex);
-                break;
-            }
-        }
-
-        try {
-            serverSocket.close();
-        } catch(IOException ex) {
-            Log.e("ERROR", "Error closing server socket", ex);
-        }
-
-        for(BluetoothSocket socket : sockets) {
-            try {
-                new InputHandler(socket.getInputStream());
-            } catch(IOException ex) {
-                Log.e("ERROR", "Error opening input stream", ex);
-            }
-        }
+        new Thread(new ServerConnectionProcess(adapter)).start();
     }
 
     public void clientConnection(BluetoothSocket socket) {
+        new Thread(new ConnectionProcess(socket)).start();
+    }
+}
+
+class ConnectionProcess implements Runnable {
+
+    private BluetoothSocket socket;
+
+    public ConnectionProcess(BluetoothSocket s) {
+        socket = s;
+    }
+
+    @Override
+    public void run() {
         Log.d("CONNECTING", socket.getRemoteDevice().getName() + socket.getRemoteDevice().getAddress());
         try {
             socket.connect();
@@ -168,6 +148,42 @@ public class MainActivity extends Activity {
             Log.i("INFO", "SUCCESS!");
         } catch(IOException ex) {
             Log.e("ERROR", "Error opening input stream", ex);
+        }
+    }
+}
+
+class ServerConnectionProcess implements Runnable {
+
+    private BluetoothAdapter adapter;
+
+    public ServerConnectionProcess(BluetoothAdapter a) {
+        adapter = a;
+    }
+
+    @Override
+    public void run() {
+        BluetoothServerSocket serverSocket = null;
+        try {
+            serverSocket = adapter.listenUsingRfcommWithServiceRecord(adapter.getName(), MainActivity.uuid);
+        } catch(IOException ex) {
+            Log.e("ERROR", "IO exception initializing server socket", ex);
+        }
+
+        boolean done = false;
+        while(true) {
+            try {
+                BluetoothSocket socket = serverSocket.accept();
+                new InputHandler(socket.getInputStream());
+            } catch(IOException ex) {
+                Log.e("ERROR", "Error accepting socket", ex);
+                break;
+            }
+        }
+
+        try {
+            serverSocket.close();
+        } catch(IOException ex) {
+            Log.e("ERROR", "Error closing server socket", ex);
         }
     }
 }
