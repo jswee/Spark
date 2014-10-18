@@ -112,7 +112,6 @@ public class MainActivity extends Activity {
             Log.d("STARTING", device.getName() + " " + device.getAddress());
             try {
                 clientConnection(device.createRfcommSocketToServiceRecord(uuid));
-                break;
             } catch (IOException ex) {
                 Log.e("ERROR", "Error creating RFCOMM socket", ex);
             }
