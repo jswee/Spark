@@ -114,6 +114,7 @@ public class ChatActivity extends Activity {
     }
 
     public void startConnection() {
+        adapter.cancelDiscovery();
         unregisterReceiver(finishedReciever);
         serverConnection();
         Log.d("DEVICES", devices.toString());
