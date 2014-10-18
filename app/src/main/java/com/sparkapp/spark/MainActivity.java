@@ -90,7 +90,6 @@ public class MainActivity extends Activity {
         IntentFilter foundFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(foundReciever, foundFilter);
 
-
         finishedReciever = new BroadcastReceiver() {
             boolean done = false;
             public void onReceive(Context context, Intent intent) {
