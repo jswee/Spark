@@ -3,15 +3,14 @@ package com.sparkapp.spark.message;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessageManager implements Runnable {
-    public volatile List<Message> messages;
+public class MessageManager {
 
-    public MessageManager() {
-        messages = new ArrayList<Message>();
-    }
+    public volatile List<Message> messages = new ArrayList<Message>();
 
-    @Override
-    public void run() {
-
+    public void addMessage(String message) {
+        int split = message.indexOf(' ');
+        long time = Long.parseLong(message.substring(0, split));
+        String msg = message.substring(split);
+        messages.add(new Message(time, msg));
     }
 }

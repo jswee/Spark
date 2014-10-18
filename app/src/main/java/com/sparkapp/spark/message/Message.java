@@ -1,6 +1,7 @@
 package com.sparkapp.spark.message;
 
 public class Message implements Comparable<Message> {
+
     public Long timestamp;
     public String text;
 
