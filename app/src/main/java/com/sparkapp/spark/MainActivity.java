@@ -3,7 +3,6 @@ package com.sparkapp.spark;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,6 +14,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+
+import com.sparkapp.spark.thread.ServerThread;
+import com.sparkapp.spark.thread.ConnectionThread;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -120,71 +122,10 @@ public class MainActivity extends Activity {
 
     public void serverConnection() {
         Log.d("STARTING", "Starting server!");
-        new Thread(new ServerConnectionProcess(adapter)).start();
+        new Thread(new ServerThread(adapter)).start();
     }
 
     public void clientConnection(BluetoothSocket socket) {
-        new Thread(new ConnectionProcess(socket)).start();
-    }
-}
-
-class ConnectionProcess implements Runnable {
-
-    private BluetoothSocket socket;
-
-    public ConnectionProcess(BluetoothSocket s) {
-        socket = s;
-    }
-
-    @Override
-    public void run() {
-        Log.d("CONNECTING", socket.getRemoteDevice().getName() + " " + socket.getRemoteDevice().getAddress());
-        try {
-            socket.connect();
-        } catch(IOException ex) {
-            Log.e("ERROR", "IO error", ex);
-            return;
-        }
-
-        new Thread(new InputHandler(socket)).start();
-        Log.i("INFO", "SUCCESS!");
-    }
-}
-
-class ServerConnectionProcess implements Runnable {
-
-    private BluetoothAdapter adapter;
-
-    public ServerConnectionProcess(BluetoothAdapter a) {
-        adapter = a;
-    }
-
-    @Override
-    public void run() {
-        BluetoothServerSocket serverSocket = null;
-        try {
-            serverSocket = adapter.listenUsingRfcommWithServiceRecord(adapter.getName(), MainActivity.uuid);
-        } catch(IOException ex) {
-            Log.e("ERROR", "IO exception initializing server socket", ex);
-        }
-
-        boolean done = false;
-        while(true) {
-            Log.d("BLUETOOTH", "Waiting for client connection");
-            try {
-                BluetoothSocket socket = serverSocket.accept();
-                Log.d("BLUETOOTH", "Connection! " + socket.getRemoteDevice().getName() + socket.getRemoteDevice().getAddress());
-                new Thread(new InputHandler(socket)).start();
-            } catch(IOException ex) {
-                Log.e("ERROR", "Error accepting socket", ex);
-                break;
-            }
-        }
-
-        try {
-            serverSocket.close();
-        } catch(IOException ex) {
-            Log.e("ERROR", "Error closing server socket", ex);
-        }
+        new Thread(new ConnectionThread(socket)).start();
     }
 }
