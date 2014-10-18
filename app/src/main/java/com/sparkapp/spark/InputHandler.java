@@ -19,6 +19,7 @@ public class InputHandler implements Runnable {
 
     @Override
     public void run() {
+        Log.d("CONNNNNNNNECTED!!!one!", "pls");
         byte val = 0;
         while(true) {
             try {

@@ -178,7 +178,7 @@ class ServerConnectionProcess implements Runnable {
             try {
                 BluetoothSocket socket = serverSocket.accept();
                 Log.d("BLUETOOTH", "Connection! " + socket.getRemoteDevice().getName() + socket.getRemoteDevice().getAddress());
-                new InputHandler(socket.getInputStream());
+                new Thread(new InputHandler(socket.getInputStream())).start();
             } catch(IOException ex) {
                 Log.e("ERROR", "Error accepting socket", ex);
                 break;
