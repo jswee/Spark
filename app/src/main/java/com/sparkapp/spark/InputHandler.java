@@ -22,25 +22,32 @@ public class InputHandler implements Runnable {
     public void run() {
         Log.d("CONNNNNNNNECTED!!!one!", "pls");
 
-        InputStream in = null;
-        try {
-            in = socket.getInputStream();
-            socket.getOutputStream().write(42);
-        } catch (IOException e) {
-            Log.e("SOCKET", e.getMessage(), e);
-        }
-        byte val = 0;
-        while(true) {
-            try {
-                val = (byte) in.read();
-            } catch (IOException e) {
-                if (e.getMessage().equals("bt socket closed, read return: -1"))
-                    break;
-                else
-                    Log.e("BLUETOOTH", "Failed to read: " + e);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                InputStream in = null;
+                try {
+                    in = socket.getInputStream();
+                    socket.getOutputStream().write(42);
+                } catch (IOException e) {
+                    Log.e("SOCKET", e.getMessage(), e);
+                }
+                byte val = 0;
+                while(true) {
+                    try {
+                        val = (byte) in.read();
+                    } catch (IOException e) {
+                        if (e.getMessage().equals("bt socket closed, read return: -1"))
+                            break;
+                        else
+                            Log.e("BLUETOOTH", "Failed to read: " + e);
+                    }
+                    buf.offer(val);
+                    Log.d("BLUETOOTH", buf.toString());
+                }
             }
-            buf.offer(val);
-            Log.d("BLUETOOTH", buf.toString());
-        }
+        }).start();
+
+        
     }
 }

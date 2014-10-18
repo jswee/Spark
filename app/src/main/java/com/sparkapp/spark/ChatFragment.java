@@ -8,6 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 public class ChatFragment extends Fragment {
     private static final String CHAT_ID = "chat_id";
 
