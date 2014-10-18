@@ -8,7 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+
+import com.sparkapp.spark.thread.PoolTable;
+import com.sparkapp.spark.thread.SocketHandler;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,7 +46,11 @@ public class ChatFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                EditText text = (EditText)getActivity().findViewById(R.id.message_input);
+                /*
+                PoolTable.socket.writeMessage(text.getText().toString())
+                        */
+                text.setText("");
             }
         });
     }
