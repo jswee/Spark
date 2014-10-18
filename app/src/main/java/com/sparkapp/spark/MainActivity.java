@@ -105,47 +105,76 @@ public class MainActivity extends Activity {
     }
 
     public void startConnection() {
+        if(devices.size() == 0)
+            serverConnection();
+        else {
+            for(BluetoothDevice device : devices) {
+                try {
+                    clientConnection(device.createRfcommSocketToServiceRecord(uuid));
+                    break;
+                } catch (IOException ex) {
+                    Log.e("ERROR", "Error creating RFCOMM socket", ex);
+                }
+            }
+        }
+    }
+
+    public void serverConnection() {
         List<BluetoothSocket> sockets = new ArrayList<BluetoothSocket>();
+        BluetoothSocket tmp;
         BluetoothServerSocket serverSocket = null;
         try {
             serverSocket = adapter.listenUsingRfcommWithServiceRecord(adapter.getName(), uuid);
-        } catch (IOException e) {
-            Log.e("BLUETOOTH", "ERROR: " + e.toString(), e);
+        } catch(IOException ex) {
+            Log.e("ERROR", "IO exception initializing server socket", ex);
         }
 
-        Log.d("BLUETOOTH", "Searching for connections");
         boolean done = false;
-        while (!done) {
+        while(true) {
             try {
-                BluetoothSocket socket = serverSocket.accept(10000);
-                sockets.add(socket);
-            } catch (IOException e) {
-                if (e.getMessage().equals("Try again"))
-                    done = true;
-                else
-                    Log.e("BLUETOOTH", "ERROR: " + e.getMessage(), e);
+                tmp = serverSocket.accept(1000);
+                if(tmp == null)
+                    break;
+                sockets.add(tmp);
+            } catch(IOException ex) {
+                Log.e("ERROR", "Error accepting socket", ex);
+                break;
             }
         }
 
-        for (BluetoothSocket s : sockets) {
-            try {
-                new Thread(new InputHandler(s.getInputStream())).start();
-                s.getOutputStream().write(42);
-            } catch (IOException e) {
-                Log.e("BLUETOOTH", "Failed to get input stream: " + e);
-            }
+        try {
+            serverSocket.close();
+        } catch(IOException ex) {
+            Log.e("ERROR", "Error closing server socket", ex);
         }
 
-        for (BluetoothDevice device : devices) {
-            Log.d("DEVICE", device.getName() + " " + device.getAddress());
+        for(BluetoothSocket socket : sockets) {
             try {
-                BluetoothSocket socket = device.createRfcommSocketToServiceRecord(uuid);
-                socket.connect();
-                new Thread(new InputHandler(socket.getInputStream())).start();
-                socket.getOutputStream().write(42);
-            } catch (IOException e) {
-                Log.e("BLUETOOTH", "ERROR: " + e.toString(), e);
+                new InputHandler(socket.getInputStream());
+            } catch(IOException ex) {
+                Log.e("ERROR", "Error opening input stream", ex);
             }
         }
+    }
+
+    public void clientConnection(BluetoothSocket socket) {
+        adapter.cancelDiscovery();
+
+        try {
+            socket.connect();
+        } catch(IOException ex) {
+            Log.e("ERROR", "IO error", ex);
+            try {
+                socket.close();
+            } catch (IOException ix) {}
+        }
+
+        try {
+            new InputHandler(socket.getInputStream());
+        } catch(IOException ex) {
+            Log.e("ERROR", "Error opening input stream", ex);
+        }
+
+        Log.i("INFO", "SUCCESS!");
     }
 }
