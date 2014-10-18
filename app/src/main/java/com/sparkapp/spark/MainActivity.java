@@ -88,10 +88,16 @@ public class MainActivity extends Activity {
         startActivity(discoverableIntent);
 
         BroadcastReceiver finishedReciever = new BroadcastReceiver() {
+            boolean done = false;
             public void onReceive(Context context, Intent intent) {
                 Log.d("DONE", "Done with recieving");
                 adapter.cancelDiscovery();
-                startConnection();
+                if (!done) {
+                    startConnection();
+                    done = true;
+                } else {
+                    Log.d("WTF", "Why am I doing this again pls");
+                }
             }
         };
         IntentFilter finishedFilter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
