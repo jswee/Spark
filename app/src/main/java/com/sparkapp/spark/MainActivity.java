@@ -17,6 +17,8 @@ import android.widget.Button;
 
 public class MainActivity extends Activity {
 
+    public static String channel_id = null;
+
     private boolean initBlue() {
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
         if(adapter == null)
