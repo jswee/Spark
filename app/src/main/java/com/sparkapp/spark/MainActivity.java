@@ -146,12 +146,8 @@ class ConnectionProcess implements Runnable {
             return;
         }
 
-        try {
-            new Thread(new InputHandler(socket.getInputStream())).start();
-            Log.i("INFO", "SUCCESS!");
-        } catch(IOException ex) {
-            Log.e("ERROR", "Error opening input stream", ex);
-        }
+        new Thread(new InputHandler(socket)).start();
+        Log.i("INFO", "SUCCESS!");
     }
 }
 
@@ -178,7 +174,7 @@ class ServerConnectionProcess implements Runnable {
             try {
                 BluetoothSocket socket = serverSocket.accept();
                 Log.d("BLUETOOTH", "Connection! " + socket.getRemoteDevice().getName() + socket.getRemoteDevice().getAddress());
-                new Thread(new InputHandler(socket.getInputStream())).start();
+                new Thread(new InputHandler(socket)).start();
             } catch(IOException ex) {
                 Log.e("ERROR", "Error accepting socket", ex);
                 break;
