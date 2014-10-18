@@ -23,7 +23,7 @@ In no particular order...
 + [Kevin Bastien](http://github.com/kbastien)
 + [Lukas Schwab](http://github.com/lukasschwab)
 + [Tarik Onalan](http://github.com/QuantumPhi)
-+ Ruhi Pudipeddi
++ [Ruhi Pudipeddi](https://www.behance.net/rocketshipd447)
 
 ## Contributing
 
