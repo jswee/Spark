@@ -107,7 +107,9 @@ public class MainActivity extends Activity {
     public void startConnection() {
         unregisterReceiver(finishedReciever);
         serverConnection();
+        Log.d("DEVICES", devices.toString());
         for(BluetoothDevice device : devices) {
+            Log.d("STARTING", device.getName() + " " + device.getAddress());
             try {
                 clientConnection(device.createRfcommSocketToServiceRecord(uuid));
                 break;
