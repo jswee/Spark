@@ -1,21 +1,16 @@
 package com.sparkapp.spark;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -105,7 +100,6 @@ public class MainActivity extends Activity {
 
         adapter.startDiscovery();
 
-
         List<BluetoothSocket> sockets = new ArrayList<BluetoothSocket>();
         BluetoothServerSocket serverSocket = null;
         try {
@@ -122,5 +116,15 @@ public class MainActivity extends Activity {
         } catch (IOException e) {
             Log.e("BLUETOOTH", "ERROR: " + e.toString());
         }
+
+        for (BluetoothSocket s : sockets) {
+            try {
+                new Thread(new InputHandler(s.getInputStream())).start();
+            } catch (IOException e) {
+                Log.e("BLUETOOTH", "Failed to get input stream: " + e);
+            }
+        }
+
+        
     }
 }
