@@ -88,6 +88,7 @@ public class MainActivity extends Activity {
 
         BroadcastReceiver finishedReciever = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
+                Log.d("DONE", "Done with recieving");
                 adapter.cancelDiscovery();
                 startConnection();
             }
@@ -96,8 +97,6 @@ public class MainActivity extends Activity {
         registerReceiver(finishedReciever, finishedFilter);
 
         adapter.startDiscovery();
-
-        unregisterReceiver(foundReciever);
     }
 
     public void startConnection() {
