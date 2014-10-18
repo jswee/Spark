@@ -27,6 +27,9 @@ public class MainActivity extends Activity {
     public static final UUID uuid = UUID.fromString("b042294f-84f1-43ca-b7f5-a84631b084f7");
     public static String channel_id = null;
 
+    BluetoothAdapter adapter;
+    List<BluetoothDevice> devices;
+
     private boolean initBlue() {
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
         if(adapter == null)
@@ -72,14 +75,14 @@ public class MainActivity extends Activity {
     }
 
     public void startDiscovery() {
-        final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+        adapter = BluetoothAdapter.getDefaultAdapter();
         if (adapter == null) {
             Log.e("BLUETOOTH", "NO BLUETOOTH?!?!?!");
         }
         Intent enableBluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         startActivityForResult(enableBluetoothIntent, 0);
 
-        final List<BluetoothDevice> devices = new ArrayList<BluetoothDevice>();
+        devices = new ArrayList<BluetoothDevice>();
 
         BroadcastReceiver foundReciever = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
@@ -93,13 +96,19 @@ public class MainActivity extends Activity {
         BroadcastReceiver finishedReciever = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 adapter.cancelDiscovery();
+                startConnection();
             }
         };
         IntentFilter finishedFilter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         registerReceiver(finishedReciever, finishedFilter);
 
-        adapter.startDiscovery();
+        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+        startActivity(discoverableIntent);
 
+        adapter.startDiscovery();
+    }
+    public void startConnection() {
         List<BluetoothSocket> sockets = new ArrayList<BluetoothSocket>();
         BluetoothServerSocket serverSocket = null;
         try {
@@ -125,6 +134,6 @@ public class MainActivity extends Activity {
             }
         }
 
-        
+        //BluetoothDevice device = adapter.
     }
 }
