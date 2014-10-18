@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Menu;
@@ -95,20 +96,17 @@ public class ChatActivity extends Activity {
     public void startConnection() {
         serverConnection();
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                Set<BluetoothDevice> pairedDevices = adapter.getBondedDevices();
-                for(BluetoothDevice device : pairedDevices) {
-                    Log.d("STARTING", device.getName() + " " + device.getAddress());
-                    try {
-                        clientConnection(device.createRfcommSocketToServiceRecord(uuid));
-                    } catch (IOException ex) {
-                        Log.e("ERROR", "Error creating RFCOMM socket", ex);
-                    }
-                }
+        SystemClock.sleep(2000);
+
+        Set<BluetoothDevice> pairedDevices = adapter.getBondedDevices();
+        for(BluetoothDevice device : pairedDevices) {
+            Log.d("STARTING", device.getName() + " " + device.getAddress());
+            try {
+                clientConnection(device.createRfcommSocketToServiceRecord(uuid));
+            } catch (IOException ex) {
+                Log.e("ERROR", "Error creating RFCOMM socket", ex);
             }
-        }, 2000);
+        }
     }
 
     public void serverConnection() {
