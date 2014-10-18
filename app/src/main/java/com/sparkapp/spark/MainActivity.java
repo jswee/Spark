@@ -164,6 +164,7 @@ public class MainActivity extends Activity {
             socket.connect();
         } catch(IOException ex) {
             Log.e("ERROR", "IO error", ex);
+            serverConnection();
             try {
                 socket.close();
             } catch (IOException ix) {}
@@ -171,10 +172,9 @@ public class MainActivity extends Activity {
 
         try {
             new InputHandler(socket.getInputStream());
+            Log.i("INFO", "SUCCESS!");
         } catch(IOException ex) {
             Log.e("ERROR", "Error opening input stream", ex);
         }
-
-        Log.i("INFO", "SUCCESS!");
     }
 }
