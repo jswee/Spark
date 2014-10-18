@@ -136,15 +136,16 @@ class ConnectionProcess implements Runnable {
 
     @Override
     public void run() {
-        Log.d("CONNECTING", socket.getRemoteDevice().getName() + socket.getRemoteDevice().getAddress());
+        Log.d("CONNECTING", socket.getRemoteDevice().getName() + " " + socket.getRemoteDevice().getAddress());
         try {
             socket.connect();
         } catch(IOException ex) {
             Log.e("ERROR", "IO error", ex);
+            return;
         }
 
         try {
-            new InputHandler(socket.getInputStream());
+            new Thread(new InputHandler(socket.getInputStream())).start();
             Log.i("INFO", "SUCCESS!");
         } catch(IOException ex) {
             Log.e("ERROR", "Error opening input stream", ex);
