@@ -112,7 +112,7 @@ public class MainActivity extends Activity {
         boolean done = false;
         while (!done) {
             try {
-                BluetoothSocket socket = serverSocket.accept(2000);
+                BluetoothSocket socket = serverSocket.accept(10000);
                 sockets.add(socket);
             } catch (IOException e) {
                 if (e.getMessage().equals("Try again"))
