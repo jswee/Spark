@@ -25,6 +25,7 @@ import com.sparkapp.spark.thread.ServerThread;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class ChatActivity extends Activity {
@@ -87,38 +88,13 @@ public class ChatActivity extends Activity {
 
         devices = new ArrayList<BluetoothDevice>();
 
-        BroadcastReceiver foundReciever = new BroadcastReceiver() {
-            public void onReceive(Context context, Intent intent) {
-                if (BluetoothDevice.ACTION_FOUND.equals(intent.getAction()))
-                    devices.add((BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE));
-            }
-        };
-        IntentFilter foundFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        registerReceiver(foundReciever, foundFilter);
-
-        finishedReciever = new BroadcastReceiver() {
-            boolean done = false;
-            public void onReceive(Context context, Intent intent) {
-                adapter.cancelDiscovery();
-                if (!done) {
-                    startConnection();
-                    done = true;
-                    Log.d("DONE", "Done with recieving");
-                }
-            }
-        };
-        IntentFilter finishedFilter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        registerReceiver(finishedReciever, finishedFilter);
-
-        adapter.startDiscovery();
+        startConnection();
     }
 
     public void startConnection() {
-        adapter.cancelDiscovery();
-        unregisterReceiver(finishedReciever);
         serverConnection();
-        Log.d("DEVICES", devices.toString());
-        for(BluetoothDevice device : devices) {
+        Set<BluetoothDevice> pairedDevices = adapter.getBondedDevices();
+        for(BluetoothDevice device : pairedDevices) {
             Log.d("STARTING", device.getName() + " " + device.getAddress());
             try {
                 clientConnection(device.createRfcommSocketToServiceRecord(uuid));
