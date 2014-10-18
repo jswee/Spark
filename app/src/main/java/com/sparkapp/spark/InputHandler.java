@@ -1,5 +1,6 @@
 package com.sparkapp.spark;
 
+import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
 import java.io.IOException;
@@ -9,17 +10,25 @@ import java.util.Queue;
 
 public class InputHandler implements Runnable {
 
-    InputStream in;
+    BluetoothSocket socket;
     Queue<Byte> buf;
 
-    public InputHandler(InputStream in) {
-        this.in = in;
+    public InputHandler(BluetoothSocket socket) {
+        this.socket = socket;
         buf = new LinkedList<Byte>();
     }
 
     @Override
     public void run() {
         Log.d("CONNNNNNNNECTED!!!one!", "pls");
+
+        InputStream in = null;
+        try {
+            in = socket.getInputStream();
+            socket.getOutputStream().write(42);
+        } catch (IOException e) {
+            Log.e("SOCKET", e.getMessage(), e);
+        }
         byte val = 0;
         while(true) {
             try {
