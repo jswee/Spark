@@ -25,6 +25,7 @@ import com.sparkapp.spark.thread.ServerThread;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class ChatActivity extends Activity {
@@ -117,8 +118,8 @@ public class ChatActivity extends Activity {
         adapter.cancelDiscovery();
         unregisterReceiver(finishedReciever);
         serverConnection();
-        Log.d("DEVICES", devices.toString());
-        for(BluetoothDevice device : devices) {
+        Set<BluetoothDevice> pairedDevices = adapter.getBondedDevices();
+        for(BluetoothDevice device : pairedDevices) {
             Log.d("STARTING", device.getName() + " " + device.getAddress());
             try {
                 clientConnection(device.createRfcommSocketToServiceRecord(uuid));
