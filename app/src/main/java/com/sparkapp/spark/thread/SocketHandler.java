@@ -9,10 +9,6 @@ import com.sparkapp.spark.message.MessageManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
 
 public class SocketHandler implements Runnable {
 
@@ -69,7 +65,7 @@ public class SocketHandler implements Runnable {
         try {
             out.write(m.toString().getBytes());
         } catch (IOException e) {
-            Log.d("WRITIN'", e.getMessage(), e);
+            Log.d("WRITIN\'", e.getMessage(), e);
         }
     }
 }
