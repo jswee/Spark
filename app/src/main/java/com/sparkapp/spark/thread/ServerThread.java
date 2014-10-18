@@ -5,7 +5,7 @@ import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
-import com.sparkapp.spark.MainActivity;
+import com.sparkapp.spark.ChatActivity;
 
 import java.io.IOException;
 
@@ -21,7 +21,7 @@ public class ServerThread implements Runnable {
     public void run() {
         BluetoothServerSocket serverSocket = null;
         try {
-            serverSocket = adapter.listenUsingRfcommWithServiceRecord(adapter.getName(), MainActivity.uuid);
+            serverSocket = adapter.listenUsingRfcommWithServiceRecord(adapter.getName(), ChatActivity.uuid);
         } catch(IOException ex) {
             Log.e("ERROR", "IO exception initializing server socket", ex);
         }

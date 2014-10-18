@@ -4,8 +4,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +27,9 @@ public class ChannelDialog extends DialogFragment {
                                 .getText().toString();
                         Log.i("INFO", MainActivity.channel_id);
                         dialogInterface.cancel();
+
+                        Intent intent = new Intent(getActivity(), ChatActivity.class);
+                        startActivity(intent);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
