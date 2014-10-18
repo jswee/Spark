@@ -78,7 +78,6 @@ public class MainActivity extends Activity {
             public void onReceive(Context context, Intent intent) {
                 if (BluetoothDevice.ACTION_FOUND.equals(intent.getAction()))
                     devices.add((BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE));
-                unregisterReceiver(this);
             }
         };
         IntentFilter foundFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
@@ -93,9 +92,10 @@ public class MainActivity extends Activity {
             public void onReceive(Context context, Intent intent) {
                 Log.d("DONE", "Done with recieving");
                 adapter.cancelDiscovery();
-                startConnection();
-
-                unregisterReceiver(this);
+                if (!done) {
+                    startConnection();
+                    done = true;
+                }
             }
         };
         IntentFilter finishedFilter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
