@@ -96,6 +96,8 @@ public class MainActivity extends Activity {
         registerReceiver(finishedReciever, finishedFilter);
 
         adapter.startDiscovery();
+
+        unregisterReceiver(foundReciever);
     }
 
     public void startConnection() {
