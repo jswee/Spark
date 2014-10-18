@@ -1,19 +1,20 @@
-package com.sparkapp.spark;
+package com.sparkapp.spark.thread;
 
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class InputHandler implements Runnable {
+public class SocketHandler implements Runnable {
 
     BluetoothSocket socket;
     Queue<Byte> buf;
 
-    public InputHandler(BluetoothSocket socket) {
+    public SocketHandler(BluetoothSocket socket) {
         this.socket = socket;
         buf = new LinkedList<Byte>();
     }
@@ -28,7 +29,6 @@ public class InputHandler implements Runnable {
                 InputStream in = null;
                 try {
                     in = socket.getInputStream();
-                    socket.getOutputStream().write(42);
                 } catch (IOException e) {
                     Log.e("SOCKET", e.getMessage(), e);
                 }
@@ -48,6 +48,12 @@ public class InputHandler implements Runnable {
             }
         }).start();
 
-        
+        OutputStream out = null;
+        try {
+            out = socket.getOutputStream();
+            out.write(42);
+        } catch(IOException ex) {
+            Log.e("BLUETOOTH", "Error writing to output stream", ex);
+        }
     }
 }

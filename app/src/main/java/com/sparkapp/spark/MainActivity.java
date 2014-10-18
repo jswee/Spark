@@ -16,6 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 
+import com.sparkapp.spark.thread.SocketHandler;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -146,7 +148,7 @@ class ConnectionProcess implements Runnable {
             return;
         }
 
-        new Thread(new InputHandler(socket)).start();
+        new Thread(new SocketHandler(socket)).start();
         Log.i("INFO", "SUCCESS!");
     }
 }
@@ -174,7 +176,7 @@ class ServerConnectionProcess implements Runnable {
             try {
                 BluetoothSocket socket = serverSocket.accept();
                 Log.d("BLUETOOTH", "Connection! " + socket.getRemoteDevice().getName() + socket.getRemoteDevice().getAddress());
-                new Thread(new InputHandler(socket)).start();
+                new Thread(new SocketHandler(socket)).start();
             } catch(IOException ex) {
                 Log.e("ERROR", "Error accepting socket", ex);
                 break;
