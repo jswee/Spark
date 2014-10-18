@@ -5,7 +5,7 @@ import java.util.List;
 
 public class PoolTable {
 
-    public static ConnectionThread connect;
     public static DiscoveryThread discover;
+    public static ServerThread server;
     public static List<SocketHandler> sockets = new ArrayList<SocketHandler>();
 }

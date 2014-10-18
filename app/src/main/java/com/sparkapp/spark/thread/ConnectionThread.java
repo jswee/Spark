@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
 import java.io.IOException;
+import java.net.Socket;
 
 public class ConnectionThread implements Runnable {
 
@@ -23,7 +24,10 @@ public class ConnectionThread implements Runnable {
             return;
         }
 
-        new Thread(new SocketHandler(socket)).start();
+        SocketHandler sh = new SocketHandler(socket);
+        PoolTable.sockets.add(sh);
+        new Thread(sh).start();
+
         Log.i("INFO", "SUCCESS!");
     }
 }

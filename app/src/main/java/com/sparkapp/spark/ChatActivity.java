@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 
 import com.sparkapp.spark.message.MessageManager;
 import com.sparkapp.spark.thread.ConnectionThread;
+import com.sparkapp.spark.thread.PoolTable;
 import com.sparkapp.spark.thread.ServerThread;
 
 import java.io.IOException;
@@ -128,7 +129,8 @@ public class ChatActivity extends Activity {
 
     public void serverConnection() {
         Log.d("STARTING", "Starting server!");
-        new Thread(new ServerThread(adapter)).start();
+        PoolTable.server = new ServerThread(adapter);
+        new Thread(PoolTable.server).start();
     }
 
     public void clientConnection(BluetoothSocket socket) {

@@ -21,6 +21,6 @@ public class DiscoveryThread implements Runnable {
 
     public static void start(BluetoothAdapter adapter) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(new DiscoveryThread(adapter), 0, 120, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(new DiscoveryThread(adapter), 120, 120, TimeUnit.SECONDS);
     }
 }
