@@ -71,6 +71,10 @@ public class MainActivity extends Activity {
         Intent enableBluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         startActivity(enableBluetoothIntent);
 
+        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+        startActivity(discoverableIntent);
+
         devices = new ArrayList<BluetoothDevice>();
 
         BroadcastReceiver foundReciever = new BroadcastReceiver() {
@@ -82,9 +86,6 @@ public class MainActivity extends Activity {
         IntentFilter foundFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(foundReciever, foundFilter);
 
-        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-        startActivity(discoverableIntent);
 
         finishedReciever = new BroadcastReceiver() {
             boolean done = false;
