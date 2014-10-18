@@ -30,6 +30,7 @@ import java.util.UUID;
 public class MainActivity extends Activity {
 
     public static final UUID uuid = UUID.fromString("b042294f-84f1-43ca-b7f5-a84631b084f7");
+    public static String channel_id = null;
 
     private boolean initBlue() {
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
@@ -121,6 +122,5 @@ public class MainActivity extends Activity {
         } catch (IOException e) {
             Log.e("BLUETOOTH", "ERROR: " + e.toString());
         }
-
     }
 }

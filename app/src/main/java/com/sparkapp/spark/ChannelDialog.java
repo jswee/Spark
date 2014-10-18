@@ -5,26 +5,34 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
 
 public class ChannelDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
+        final View layout;
 
         return new AlertDialog.Builder(getActivity())
-                .setView(inflater.inflate(R.layout.dialog_channel, null))
+                .setView((layout = inflater.inflate(R.layout.dialog_channel, null)))
                 .setPositiveButton("Connect!", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        //connect/create channel
+                        MainActivity.channel_id = ((EditText) layout.findViewById(R.id.channel_id))
+                                .getText().toString();
+                        Log.i("INFO", MainActivity.channel_id);
+                        dialogInterface.cancel();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        ChannelDialog.this.getDialog().cancel();
+                        dialogInterface.cancel();
                     }
                 })
                 .create();
