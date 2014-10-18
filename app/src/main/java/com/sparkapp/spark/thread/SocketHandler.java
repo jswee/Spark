@@ -3,6 +3,7 @@ package com.sparkapp.spark.thread;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
+import com.sparkapp.spark.message.Message;
 import com.sparkapp.spark.message.MessageManager;
 
 import java.io.IOException;
@@ -64,9 +65,9 @@ public class SocketHandler implements Runnable {
         }
     }
 
-    public void writeMessage(String s) {
+    public void writeMessage(Message m) {
         try {
-            out.write(s.getBytes());
+            out.write(m.toString().getBytes());
         } catch (IOException e) {
             Log.d("WRITIN'", e.getMessage(), e);
         }
