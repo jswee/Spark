@@ -41,24 +41,21 @@ public class ChatFragment extends Fragment {
         if (getArguments() != null) {
             chat_id = getArguments().getString(CHAT_ID);
         }
+    }
 
-        ImageButton button = (ImageButton)(getActivity().findViewById(R.id.send_button));
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_chat, container, false);
+        ImageButton button = (ImageButton)(view.findViewById(R.id.send_button));
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 EditText text = (EditText)getActivity().findViewById(R.id.message_input);
-                /*
-                PoolTable.socket.writeMessage(text.getText().toString())
-                        */
+                // PoolTable.socket.writeMessage(text.getText().toString())
                 text.setText("");
             }
         });
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_chat, container, false);
+        return view;
     }
 
     public void onButtonPressed(Uri uri) {

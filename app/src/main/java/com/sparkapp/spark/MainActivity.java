@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.sparkapp.spark.thread.SocketHandler;
@@ -41,16 +42,16 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_chat);
-        /*
-        ImageButton connectButton = (ImageButton)findViewById(R.id.connect);
-        connectButton.setOnClickListener(new View.OnClickListener() {
+
+        ImageButton button = (ImageButton)(findViewById(R.id.send_button));
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //new ChannelDialog().show(getFragmentManager(), "Channel");
-                startDiscovery();
+                EditText text = (EditText)findViewById(R.id.message_input);
+                // PoolTable.socket.writeMessage(text.getText().toString())
+                text.setText("");
             }
         });
-        */
     }
 
     @Override

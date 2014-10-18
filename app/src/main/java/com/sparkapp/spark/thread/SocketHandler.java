@@ -50,7 +50,7 @@ public class SocketHandler implements Runnable {
                     buf.append((char)val);
                     if ((char)val == '\n') {
                         MessageManager.addMessage(buf.toString());
-                        buf.setLength(0);
+                        buf = new StringBuilder();
                     }
                     Log.d("BLUETOOTH", buf.toString());
                 }
