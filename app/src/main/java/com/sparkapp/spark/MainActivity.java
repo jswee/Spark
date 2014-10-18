@@ -120,6 +120,7 @@ public class MainActivity extends Activity {
     }
 
     public void serverConnection() {
+        Log.d("STARTING", "Starting server!");
         new Thread(new ServerConnectionProcess(adapter)).start();
     }
 
@@ -174,8 +175,10 @@ class ServerConnectionProcess implements Runnable {
 
         boolean done = false;
         while(true) {
+            Log.d("BLUETOOTH", "Waiting for client connection");
             try {
                 BluetoothSocket socket = serverSocket.accept();
+                Log.d("BLUETOOTH", "Connection! " + socket.getRemoteDevice().getName() + socket.getRemoteDevice().getAddress());
                 new InputHandler(socket.getInputStream());
             } catch(IOException ex) {
                 Log.e("ERROR", "Error accepting socket", ex);
