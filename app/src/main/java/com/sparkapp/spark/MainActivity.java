@@ -113,7 +113,7 @@ public class MainActivity extends Activity {
         boolean done = false;
         while (!done) {
             try {
-                BluetoothSocket socket = serverSocket.accept(10);
+                BluetoothSocket socket = serverSocket.accept(2000);
                 sockets.add(socket);
             } catch (IOException e) {
                 if (e.getMessage().equals("Try again"))
@@ -132,8 +132,7 @@ public class MainActivity extends Activity {
             }
         }
 
-        Set<BluetoothDevice> pairedDevices = adapter.getBondedDevices();
-        for (BluetoothDevice device : pairedDevices) {
+        for (BluetoothDevice device : devices) {
             Log.d("DEVICE", device.getName() + " " + device.getAddress());
             try {
                 BluetoothSocket socket = device.createRfcommSocketToServiceRecord(uuid);
