@@ -1,6 +1,5 @@
 package com.sparkapp.spark.message;
 
-import android.content.Intent;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -20,13 +19,13 @@ public class MessageManager {
 
     public static void addMessage(final String message) {
         messages.add(new Message(message));
-        /*activity.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 ListView list = (ListView) activity.findViewById(R.id.message_list);
                 list.setAdapter(new ArrayAdapter<Message>(activity, R.layout.message_layout, messages));
             }
-        });*/
+        });
         Log.d("RECIEVED", message);
     }
 
