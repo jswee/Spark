@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
-import com.sparkapp.spark.InputHandler;
 import com.sparkapp.spark.MainActivity;
 
 import java.io.IOException;
@@ -33,7 +32,7 @@ public class ServerThread implements Runnable {
             try {
                 BluetoothSocket socket = serverSocket.accept();
                 Log.d("BLUETOOTH", "Connection! " + socket.getRemoteDevice().getName() + socket.getRemoteDevice().getAddress());
-                new Thread(new InputHandler(socket)).start();
+                new Thread(new SocketHandler(socket)).start();
             } catch(IOException ex) {
                 Log.e("ERROR", "Error accepting socket", ex);
                 break;

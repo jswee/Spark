@@ -6,17 +6,19 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class SocketHandler implements Runnable {
 
     BluetoothSocket socket;
-    Queue<Byte> buf;
+    List<Character> buf;
 
     public SocketHandler(BluetoothSocket socket) {
         this.socket = socket;
-        buf = new LinkedList<Byte>();
+        buf = new ArrayList<Character>();
     }
 
     @Override
@@ -32,17 +34,17 @@ public class SocketHandler implements Runnable {
                 } catch (IOException e) {
                     Log.e("SOCKET", e.getMessage(), e);
                 }
-                byte val = 0;
+                int val = 0;
                 while(true) {
                     try {
-                        val = (byte) in.read();
+                        val = in.read();
                     } catch (IOException e) {
                         if (e.getMessage().equals("bt socket closed, read return: -1"))
                             break;
                         else
                             Log.e("BLUETOOTH", "Failed to read: " + e);
                     }
-                    buf.offer(val);
+                    buf.add((char)val);
                     Log.d("BLUETOOTH", buf.toString());
                 }
             }
