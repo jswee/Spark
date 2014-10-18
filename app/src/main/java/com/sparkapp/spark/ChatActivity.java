@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Menu;
@@ -93,6 +95,9 @@ public class ChatActivity extends Activity {
 
     public void startConnection() {
         serverConnection();
+
+        SystemClock.sleep(2000);
+
         Set<BluetoothDevice> pairedDevices = adapter.getBondedDevices();
         for(BluetoothDevice device : pairedDevices) {
             Log.d("STARTING", device.getName() + " " + device.getAddress());
