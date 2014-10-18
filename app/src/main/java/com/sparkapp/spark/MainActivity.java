@@ -90,11 +90,11 @@ public class MainActivity extends Activity {
         BroadcastReceiver finishedReciever = new BroadcastReceiver() {
             boolean done = false;
             public void onReceive(Context context, Intent intent) {
-                Log.d("DONE", "Done with recieving");
                 adapter.cancelDiscovery();
                 if (!done) {
                     startConnection();
                     done = true;
+                    Log.d("DONE", "Done with recieving");
                 }
             }
         };
