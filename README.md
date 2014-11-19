@@ -19,11 +19,12 @@ There are already some projects (e.g. Commotion Wireless) that seek to solve thi
 
 In no particular order...
 
-+ [Shreyas Raman](http://github.com/anubiann00b)
-+ [Kevin Bastien](http://github.com/kbastien)
-+ [Lukas Schwab](http://github.com/lukasschwab)
-+ [Tarik Onalan](http://github.com/QuantumPhi)
++ [Shreyas Raman](https://github.com/anubiann00b)
++ [Kevin Bastien](https://github.com/kbastien)
++ [Lukas Schwab](https://github.com/lukasschwab)
++ [Tarik Onalan](https://github.com/QuantumPhi)
 + [Ruhi Pudipeddi](https://www.behance.net/rocketshipd447)
++ [jswee](https://github.com/jswee)
 
 ## Contributing
 
